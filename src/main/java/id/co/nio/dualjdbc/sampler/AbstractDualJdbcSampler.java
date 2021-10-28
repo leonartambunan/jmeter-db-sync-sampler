@@ -19,7 +19,7 @@ public abstract class AbstractDualJdbcSampler extends AbstractSampler implements
     private String jdbc1Username = "";
     private String jdbc2Username = "";
     private String jdbc1Password = "";
-    private String Jdbc2Password = "";
+    private String jdbc2Password = "";
 
     private String upsertQuery = "";
     private String checkingQuery = "";
@@ -55,13 +55,13 @@ public abstract class AbstractDualJdbcSampler extends AbstractSampler implements
     public void connectToDst() {
         try {
             failureReason = "Unknown";
-            dstConnection = DstDataSource.getInstance(log,jdbc2Driver, jdbc2Url, jdbc2Username, Jdbc2Password).getConnection();
+            dstConnection = DstDataSource.getInstance(log,jdbc2Driver, jdbc2Url, jdbc2Username, jdbc2Password).getConnection();
         } catch (Exception e) {
             failureReason = e.getMessage();
             try {
                 dstConnection.close();
             } catch (SQLException throwable) {
-                throwable.printStackTrace();
+                log.error(throwable.getMessage());
             }
             log.error("JDBC connexion error", e);
         }
@@ -72,7 +72,7 @@ public abstract class AbstractDualJdbcSampler extends AbstractSampler implements
             try {
                 srcConnection.close();
             } catch (SQLException throwable) {
-                throwable.printStackTrace();
+                log.error(throwable.getMessage());
             }
         }
 
@@ -80,7 +80,7 @@ public abstract class AbstractDualJdbcSampler extends AbstractSampler implements
             try {
                 dstConnection.close();
             } catch (SQLException throwable) {
-                throwable.printStackTrace();
+                log.error(throwable.getMessage());
             }
         }
     }
@@ -150,11 +150,11 @@ public abstract class AbstractDualJdbcSampler extends AbstractSampler implements
     }
 
     public String getJdbc2Password() {
-        return Jdbc2Password;
+        return jdbc2Password;
     }
 
     public void setJdbc2Password(String jdbc2Password) {
-        this.Jdbc2Password = jdbc2Password;
+        this.jdbc2Password = jdbc2Password;
     }
 
     public int getConnectionTimeout() {

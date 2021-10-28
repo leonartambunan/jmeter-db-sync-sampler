@@ -10,8 +10,6 @@ import java.sql.*;
 public class DualJdbcSampler extends AbstractDualJdbcSampler {
 
     private static final Logger log = LoggingManager.getLoggerForClass();
-    private String upsertQuery;
-    private String checkingQuery;
 
     public DualJdbcSampler() {
         super("Dual JDBC Sampler");
@@ -22,7 +20,7 @@ public class DualJdbcSampler extends AbstractDualJdbcSampler {
         res.setSampleLabel(getName() + ":(" + getJdbc1Username() + "@" + getJdbc1Driver() + ":" + getJdbc1Url() + ")");
 
         // Set up sampler return types
-        res.setSamplerData(upsertQuery);
+        res.setSamplerData(getUpsertQuery());
 
         res.setDataType(SampleResult.TEXT);
         res.setContentType("text/plain");
@@ -50,7 +48,7 @@ public class DualJdbcSampler extends AbstractDualJdbcSampler {
                 throw new NullPointerException("Failed to connect to DB server: " + getFailureReason());
             }
 
-            response = doProcess(upsertQuery, checkingQuery, res);
+            response = doProcess(getUpsertQuery(), getCheckingQuery(), res);
             res.setResponseData(response.getBytes());
 
             res.setSuccessful(true);
@@ -120,21 +118,4 @@ public class DualJdbcSampler extends AbstractDualJdbcSampler {
 
         return sb.toString();
     }
-
-    public String getUpsertQuery() {
-        return upsertQuery;
-    }
-
-    public void setUpsertQuery(String source) {
-        this.upsertQuery = source;
-    }
-
-    public String getCheckingQuery() {
-        return checkingQuery;
-    }
-
-    public void setCheckingQuery(String checkingQuery) {
-        this.checkingQuery = checkingQuery;
-    }
-
 }
